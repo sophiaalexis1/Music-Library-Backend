@@ -19,3 +19,18 @@ def song_list(request):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+@api_view(['GET'])
+def song_detail(request, pk):
+    songs = get_object_or_404(Songs, pk=pk)
+    if request.method == 'GET':
+        serializer = MusicLibrarySerializer(songs)
+        return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = MusicLibrarySerializer(songs, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    elif request.method == 'DELETE':
+        songs.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
